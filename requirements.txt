@@ -1,0 +1,13 @@
+yfinance==0.1.63
+scikit-learn
+keras==2.6.0
+numpy
+pandas
+alpaca_trade_api
+gym
+wrds
+swig
+matplotlib
+stable_baselines3
+finrl
+jupyter
