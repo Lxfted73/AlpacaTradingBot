@@ -11,3 +11,4 @@ matplotlib
 stable_baselines3
 finrl
 jupyter
+mpld3
