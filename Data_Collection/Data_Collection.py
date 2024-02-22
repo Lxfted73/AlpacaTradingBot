@@ -2,27 +2,31 @@ import alpaca_trade_api as tradeapi
 import matplotlib.pyplot as plt
 import pandas as pd
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
 
 from Save_Data_Dow30_CSV_Creation import createCSV
 from Save_Data_Dow30_JSON_Creation import createJSON
 
 print_graphs = 'TRUE'
 ticker_file_path = 'Dow30_Tickers.txt'
-csv_file_path = 'Dow30_historical_data_1D.csv'
-json_file_path = 'Dow30_json_1D.json'
+csv_file_path = 'Dow30_historical_data_1H.csv'
+json_file_path = 'Dow30_json_1H.json'
 API_KEY = 'PK86KPRI77Y6A9LQ0ZL3'
 SECRET_KEY = '0Ex9CtepMfIHQaYajTvCeCeg9gbNgyXNQdOJi8T4'
 BASE_URL = 'https://paper-api.alpaca.markets'
 
-# json_create = createJSON(API_KEY, SECRET_KEY, BASE_URL, json_file_path, ticker_file_path)
-# json_create.set_start_date_and_end_date('2021-01-01', '2023-01-31')
-# json_create.set_timeframe("1D")
-# json_create.createJSON()
-#
-# csv_create = createCSV()
-# csv_create.setCSVFilePath('Dow30_historical_data_1D.csv')
-# csv_create.setJSONFilePath('Dow30_json_1D.json')
-# csv_file = csv_create.createCSV()
+create_json_and_csv = False
+if create_json_and_csv:
+    json_create = createJSON(API_KEY, SECRET_KEY, BASE_URL, json_file_path, ticker_file_path)
+    json_create.set_start_date_and_end_date('2021-01-01', '2023-01-31')
+    json_create.set_timeframe("1H")
+    json_create.createJSON()
+
+    csv_create = createCSV()
+    csv_create.setCSVFilePath('Dow30_historical_data_1H.csv')
+    csv_create.setJSONFilePath('Dow30_json_1H.json')
+    csv_file = csv_create.createCSV()
 
 # Read the csv file
 data = pd.read_csv(csv_file_path)
@@ -72,25 +76,32 @@ if print_graphs:
     #     plt.grid(True)
     #     plt.tight_layout()
     #     plt.show()
+    num_graphs = 1
+    num_stocks = 1
+    shift = 1
+    fig = make_subplots(rows = num_graphs, cols = 1,shared_xaxes=True)
+    for j in range(num_graphs):
+        fig.add_trace(go.Scatter(), row= j + 1, col=1)
 
-    for i in range(3):
-        current_group_key = group_keys[i]
-        current_group = grouped.get_group(current_group_key)
-        fig.add_trace(go.Scatter(x=current_group['Timestamp'], y=current_group['Close'], mode='lines',
-                                 name=current_group_key))
+        for i in range(num_stocks):
+            current_group_key = group_keys[i + j * num_stocks + shift]
+            current_group = grouped.get_group(current_group_key)
+            fig.add_trace(go.Scatter(x=current_group['Timestamp'], y=current_group['Close'], mode='lines',
+                                     name=current_group_key), row=j+1, col=1)
 
-    # Update layout
-    fig.update_layout(
-        title=str(f"{current_group['Symbol'].iloc[1]} - Close Price Over Time"),
-        xaxis_title='Timestamp',
-        yaxis_title='Close Price',
-        xaxis=dict(tickangle=-45),
-        showlegend=True
-    )
+        fig.update_xaxes(title_text="Timestamp", row=j + 1, col=1)
+        fig.update_yaxes(title_text="Close Price", row=j + 1, col=1)
+
+        # Update layout
+        fig.update_layout(
+            title=str(f"{current_group['Symbol'].iloc[1]} - Close Price Over Time"),
+            xaxis_title='Timestamp',
+            yaxis_title='Close Price',
+            xaxis=dict(tickangle=-45),
+            showlegend=True
+        )
 
     # Show the plot
     fig.show()
-
-        #plt.plot(group_df.index, group_df['Close'], label=symbol)
 
 
