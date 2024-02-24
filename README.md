@@ -20,8 +20,6 @@ This Python script conducts detailed analysis of financial indicators for Dow 30
 - **API Integration:** Familiar with integrating external APIs, such as the Alpaca API, to collect real-time or historical market data for analysis.
 - **Technical Proficiency:** Well-versed in utilizing libraries and tools like Pandas, TA-Lib, Plotly, and Matplotlib for conducting comprehensive financial analysis.
 - **Problem Solving:** Strong problem-solving skills in addressing challenges related to data processing, indicator computation, and visualization tasks.
-- **Collaboration:** Open to collaboration and contributions, with a willingness to work in a team environment and share knowledge with peers.
-
 ### Example Usage:
 
 ```python
